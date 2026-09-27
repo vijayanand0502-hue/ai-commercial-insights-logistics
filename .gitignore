@@ -1,0 +1,22 @@
+# Data: keep the folders, ignore the contents
+data/*
+!data/raw/
+!data/processed/
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Trained models: keep the folder, ignore the files
+models/*
+!models/.gitkeep
+
+# Local settings (no secrets needed in this project)
+.env
+
+# Python
+__pycache__/
+.venv/
+
+# macOS
+.DS_Store
