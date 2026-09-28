@@ -37,6 +37,8 @@ NUMERIC_FEATURES = ["product_price", "quantity", "discount_rate"]
 
 # Categories seen fewer times than this in training are merged into one "infrequent" group.
 # Keeps high-cardinality columns (e.g. 3,585 order cities) small and avoids noisy rare values.
+# It also keeps every column under HistGradientBoosting's limit of 255 categories per feature
+# (the largest is 57 today); recheck this if the dataset changes.
 MIN_CATEGORY_COUNT = 500
 
 

@@ -1,3 +1,6 @@
-model,cv_roc_auc,accuracy,precision,recall,f1,roc_auc
-Logistic regression,0.736,0.691,0.864,0.552,0.673,0.736
-HistGradientBoosting,0.736,0.689,0.827,0.584,0.685,0.736
+model,cv_roc_auc,cv_roc_auc_std,accuracy,precision,recall,f1,roc_auc
+Always late (baseline),0.5,0.0,0.573,0.573,1.0,0.728,0.5
+Shipping mode only (baseline),0.742,0.004,0.695,0.883,0.539,0.67,0.739
+Logistic regression,0.742,0.005,0.694,0.859,0.557,0.676,0.731
+HistGradientBoosting,0.74,0.005,0.69,0.833,0.574,0.679,0.732
+HistGradientBoosting (threshold 0.40),0.74,0.005,0.618,0.633,0.795,0.705,0.732
