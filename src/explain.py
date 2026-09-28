@@ -55,7 +55,8 @@ def build_explainer(pipeline, background_orders):
         # shap passes plain arrays; restore column names so the model sees what it was trained on.
         return model.predict_proba(pd.DataFrame(encoded, columns=columns))[:, 1]
 
-    # A fixed seed makes the random feature orderings repeatable, so an order always gets the same explanation.
+    # shap applies the seed once, here in the constructor (np.random.seed, which also resets numpy's global
+    # random state). A fresh explainer is repeatable; reusing one gives slightly different explanations per call.
     return shap.PermutationExplainer(predict_late, shap.maskers.Independent(background), seed=RANDOM_STATE)
 
 
