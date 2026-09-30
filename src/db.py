@@ -200,6 +200,28 @@ def save_prediction(conn, order_item_id, risk_probability, risk_level):
     conn.commit()
 
 
+def save_predictions(conn, order_item_ids, risk_probabilities, risk_levels):
+    """Store many model scores in one transaction: all rows are saved, or none if any row fails."""
+    created_at = datetime.now(timezone.utc).isoformat()
+    rows = [
+        (int(item_id), float(prob), level, created_at)
+        for item_id, prob, level in zip(order_item_ids, risk_probabilities, risk_levels)
+    ]
+    # "with conn" commits if the block succeeds and rolls back if it raises, so a failed batch
+    # leaves no half-saved rows behind on this connection.
+    with conn:
+        conn.executemany(
+            "INSERT INTO predictions (order_item_id, risk_probability, risk_level, created_at) "
+            "VALUES (?, ?, ?, ?)",
+            rows,
+        )
+
+
+def count_predictions(conn):
+    """Return how many predictions are stored."""
+    return conn.execute("SELECT COUNT(*) FROM predictions").fetchone()[0]
+
+
 def get_predictions(conn, role, region):
     """Return saved predictions joined to their order's region, filtered the same way as get_orders."""
     query = (

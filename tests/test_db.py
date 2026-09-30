@@ -240,3 +240,60 @@ def test_demo_users_twice_does_not_duplicate(conn, monkeypatch):
     db.create_demo_users(conn)
     db.create_demo_users(conn)
     assert conn.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 2
+
+
+# ---------- save_predictions (bulk) and count_predictions ----------
+
+def test_count_predictions_is_zero_on_empty_table(conn_with_orders):
+    assert db.count_predictions(conn_with_orders) == 0
+
+
+def test_save_predictions_inserts_all_rows(conn_with_orders):
+    db.save_predictions(conn_with_orders, [101, 102, 104], [0.9, 0.2, 0.5], ["High", "Low", "High"])
+    assert db.count_predictions(conn_with_orders) == 3
+    saved = db.get_predictions(conn_with_orders, "admin", db.ALL_REGIONS).sort_values("order_item_id")
+    assert list(saved["order_item_id"]) == [101, 102, 104]
+    assert list(saved["risk_level"]) == ["High", "Low", "High"]
+    assert saved["created_at"].nunique() == 1  # one batch, one timestamp
+
+
+def test_save_predictions_accepts_pandas_and_numpy_values(conn_with_orders):
+    # The app passes a pandas Series of ids and a numpy array of probabilities.
+    ids = pd.Series([101, 102])
+    probabilities = pd.Series([0.1, 0.8]).to_numpy()
+    db.save_predictions(conn_with_orders, ids, probabilities, ["Low", "High"])
+    assert db.count_predictions(conn_with_orders) == 2
+
+
+def test_save_predictions_empty_batch_saves_nothing(conn_with_orders):
+    db.save_predictions(conn_with_orders, [], [], [])
+    assert db.count_predictions(conn_with_orders) == 0
+
+
+def test_count_predictions_counts_single_and_bulk_saves(conn_with_orders):
+    db.save_prediction(conn_with_orders, 101, 0.7, "High")
+    db.save_predictions(conn_with_orders, [102, 103], [0.1, 0.2], ["Low", "Low"])
+    assert db.count_predictions(conn_with_orders) == 3
+
+
+def test_save_predictions_unknown_order_raises_and_commits_nothing(conn_with_orders, tmp_path):
+    with pytest.raises(sqlite3.IntegrityError):
+        db.save_predictions(conn_with_orders, [101, 999], [0.5, 0.5], ["High", "High"])
+    # A second connection sees only committed data: the valid row 101 must not be saved either.
+    other = db.get_connection(tmp_path / "test.db")
+    assert db.count_predictions(other) == 0
+    other.close()
+
+
+def test_save_predictions_failed_batch_leaves_nothing_pending(conn_with_orders):
+    # Was known issue KI-2: a failed batch used to leave its first rows pending on the connection.
+    with pytest.raises(sqlite3.IntegrityError):
+        db.save_predictions(conn_with_orders, [101, 999], [0.5, 0.5], ["High", "High"])
+    db.save_prediction(conn_with_orders, 102, 0.3, "Low")  # commits on the same connection
+    assert db.count_predictions(conn_with_orders) == 1  # only the 102 row, not the half batch
+
+
+@pytest.mark.parametrize("bad_probability", [-0.1, 1.5])
+def test_save_predictions_probability_outside_0_1_raises(conn_with_orders, bad_probability):
+    with pytest.raises(sqlite3.IntegrityError):
+        db.save_predictions(conn_with_orders, [101], [bad_probability], ["High"])
