@@ -14,7 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from src import db
-from src.data_prep import load_processed
+from src.data_prep import PROCESSED_FILE, load_processed
 from src.explain import BACKGROUND_SIZE, RANDOM_STATE, build_explainer, explain_order
 from src.features import CATEGORICAL_FEATURES, NUMERIC_FEATURES
 from src.train import MODEL_FILE, TARGET, split_train_test
@@ -312,8 +312,14 @@ def show_batch(user, model):
 # ---------- main ----------
 
 def main():
-    if not db.DB_FILE.exists() or not MODEL_FILE.exists():
-        st.error("Database or model missing. Run: python -m src.db and python -m src.train (see docs/setup.md).")
+    # The checker also needs the processed CSV (SHAP background), so all three files are checked here.
+    missing = [str(path) for path in (PROCESSED_FILE, MODEL_FILE, db.DB_FILE) if not path.exists()]
+    if missing:
+        st.error(
+            f"Missing: {', '.join(missing)}. From the project root run, in order: "
+            "`.venv/bin/python -m src.data_prep`, `.venv/bin/python -m src.train`, "
+            "`.venv/bin/python -m src.db` (see docs/setup.md)."
+        )
         st.stop()
 
     if "user" not in st.session_state:

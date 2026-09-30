@@ -1,8 +1,47 @@
 # Setup
 
-## Build the database
+Run every command from the project root. Always use the project `.venv`, not conda.
 
-Run from the project root after `src.data_prep` has created `data/processed/orders_clean.csv`:
+## 1. Create the environment
+
+```bash
+python3.12 -m venv .venv
+```
+
+```bash
+.venv/bin/pip install -r requirements.txt
+```
+
+## 2. Get the dataset
+
+Download the DataCo Smart Supply Chain dataset from Kaggle and put `DataCoSupplyChainDataset.csv`
+in `data/raw/` (git-ignored).
+
+## 3. Prepare the data
+
+```bash
+.venv/bin/python -m src.data_prep
+```
+
+Creates `data/processed/orders_clean.csv`.
+
+## 4. Train the model
+
+```bash
+.venv/bin/python -m src.train
+```
+
+Creates `models/model.joblib`, `reports/model_comparison.csv` and the model figures in `reports/figures/`.
+
+## 5. SHAP figure (optional for the app)
+
+```bash
+.venv/bin/python -m src.explain
+```
+
+Creates `reports/figures/10_shap_global_importance.png`.
+
+## 6. Build the database
 
 ```bash
 .venv/bin/python -m src.db
@@ -25,3 +64,20 @@ DEMO_ADMIN_PASSWORD=... DEMO_ANALYST_PASSWORD=... .venv/bin/python -m src.db
 ```
 
 Passwords are stored only as salted scrypt hashes. A user's password is set when the account is created, so to change a demo password, delete `data/app.db` and rebuild.
+
+## 7. Start the app
+
+```bash
+.venv/bin/streamlit run app.py
+```
+
+Opens at http://localhost:8501. If `data/processed/orders_clean.csv`, `models/model.joblib` or `data/app.db`
+is missing, the app says which one and stops. Restart the app after rebuilding the database.
+
+## 8. Run the tests
+
+```bash
+.venv/bin/python -m pytest
+```
+
+See `docs/test-report.md`.
