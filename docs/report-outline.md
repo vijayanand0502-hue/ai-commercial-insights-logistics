@@ -71,7 +71,6 @@ Suggested file: `docs/report/02_design_and_implementation.md`. Section numbers a
 **B. System Planning (PERT Chart)**
 - The PERT diagram and its activity table (docs/diagrams/pert.md): activities, predecessors, o/m/p estimates, expected times and the critical path.
 - Planned versus actual dates, from docs/ai-use-log.md.
-- The change of submission date to Oct 1.
 
 **C. Process Logic of Each Module** (also covers M13, Process involved)
 1. `src/data_prep.py`: the row filter, the leakage and drop column lists, cleaning steps and validation. Place EDA figures 01-07 here.

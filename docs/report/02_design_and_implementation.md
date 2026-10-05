@@ -171,7 +171,7 @@ Work went faster than planned. According to `docs/ai-use-log.md`:
 - **Activity L (defect fixes):** 30 September.
 - **Activities M, N, O and S:** 30 September. These are the documentation, the checklist, the README and the fresh clone test.
 
-The submission date was later moved forward from 5 October to **1 October 2026**. The PERT chart above shows the original plan. The remaining activities were:
+The final submission date is **5 October 2026**, the end of the planned window. The remaining activities were:
 
 - viva practice (P)
 - the final code review (Q) [FILL: completed or not, and date]

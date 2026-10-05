@@ -1,7 +1,7 @@
 # Requirements Checklist: Late Delivery Risk Prediction
 
 Source: university "Guidelines for Submission of Project" (Major Project-Assignment 1).
-Final submission: Thu Oct 1, 2026 (moved from Mon Oct 5).
+Final submission: Mon Oct 5, 2026.
 Last updated: 2026-09-30.
 
 Owner: **Student** = you write or do it. **Claude** = supporting artifact produced with Claude Code, reviewed and understood by you.
@@ -55,7 +55,7 @@ Report drafts are in `docs/report/`: Part 1 is `01_front_and_intro.md` and Part 
 | 3.6 | Theoretical background (LR, tree models, metrics, SHAP) | Part 1, section 2; 8 citations are [FILL] | Student | Drafted |
 | 3.7 | Definition of problem | Part 1, section 3 | Student | Drafted |
 | 3.8 | System analysis and design vs user requirements | Diagram done: reports/figures/diagrams/architecture.png. Text (Part 2) missing | Student (diagram: Claude) | Partial |
-| 3.9 | System planning (PERT chart) | reports/figures/diagrams/pert.png. Chart still ends at Oct 5 and durations are estimates. Text (Part 2) missing | Student (diagram: Claude) | Partial |
+| 3.9 | System planning (PERT chart) | reports/figures/diagrams/pert.png. Durations are estimates. Text (Part 2) missing | Student (diagram: Claude) | Partial |
 | 3.10 | Process logic of each module | Diagram done: reports/figures/diagrams/ml_pipeline.png. Text (Part 2) missing | Student (diagram: Claude) | Partial |
 | 3.11 | Methodology, system implementation, hardware and software | docs/hardware-software.md (CPU/RAM are [FILL]). Text (Part 2) missing | Student (list: Claude) | Partial |
 | 3.12 | System maintenance and evaluation (retraining, model metrics) | Part 3, section 4 | Student | Drafted |
@@ -140,7 +140,7 @@ Report drafts are in `docs/report/`: Part 1 is `01_front_and_intro.md` and Part 
 | Software: code | 15% |
 | **Pass mark** | **50% overall** |
 
-## 7. What's missing (in priority order for the Oct 1 submission)
+## 7. What's missing (in priority order for the Oct 5 submission)
 
 **Blocking: needed to submit**
 
@@ -174,7 +174,7 @@ Report drafts are in `docs/report/`: Part 1 is `01_front_and_intro.md` and Part 
 
 **Consistency fixes**
 
-13. **Deadline references:** CLAUDE.md, docs/diagrams/pert.md (and pert.png) and docs/claude-code-playbook.md still say Mon Oct 5.
+13. **Deadline references:** all documents now give Mon Oct 5, 2026.
 14. **EDA notebook interpretation cells** are empty (5.4).
 15. **Screenshots show your browser's bookmarks bar.** Consider cropping it before the report is printed.
 16. **The analyst dashboard screenshot is scrolled.** The page title and "Region: Central America" line are cut off at the top; the sidebar still shows "Regions: Central America".
