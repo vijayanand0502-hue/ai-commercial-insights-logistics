@@ -11,7 +11,7 @@ No external APIs and no LLMs in the product. Everything runs locally.
 - Work on one module at a time. Do not modify files outside the current task.
 - Never commit or push without asking me.
 - Append every significant task to docs/ai-use-log.md (date, task, tool/subagent used, what I reviewed or changed).
-- Never write the project report text. Only produce code, diagrams, data dictionary, test report, and user manual.
+- Draft the report from repo facts only. Never invent numbers, names, dates, costs or references. Mark anything unknown as [FILL: what is needed].
 
 ## Scope (minimum viable version, do not expand without asking)
 - Dataset: DataCo Smart Supply Chain (Kaggle), in data/raw/

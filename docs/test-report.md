@@ -32,8 +32,9 @@ From the project root:
   `data/app.db` (all of test_app_logic).
 - The access-control tests (AP-21 to AP-24) run the real app with `streamlit.testing.v1.AppTest`
   and log in with the demo users `admin` / `admin123` and `analyst` / `analyst123` (docs/setup.md).
-  They open `data/app.db` **read-only**. If the demo users were created with other passwords
-  (env vars), the login tests are skipped.
+  They run the app on a private **copy** of `data/app.db`, so the real database is never changed (the app may
+  save predictions in the copy at the first login after a fresh build). If the demo users were created with
+  other passwords (env vars), the login tests are skipped.
 - The full training (`python -m src.train`) is not run by the tests because it is too slow.
   Its functions are tested on small synthetic data instead.
 

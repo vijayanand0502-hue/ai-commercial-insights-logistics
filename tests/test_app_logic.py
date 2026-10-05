@@ -4,12 +4,13 @@ app.py is a Streamlit script, so importing it runs main() in "bare mode" (it sho
 login form and returns; Streamlit prints harmless "missing ScriptRunContext" warnings).
 
 The access-control tests drive the real app with streamlit.testing.v1.AppTest and log in
-with the demo users in data/app.db. The database is opened READ-ONLY for these tests,
-so data/app.db can never be changed by them.
+with the demo users. The app runs on a private COPY of data/app.db (it may save predictions
+there at the first login), so the real data/app.db is never changed by these tests.
 
 Skipped if data/app.db or models/model.joblib is missing.
 """
 
+import shutil
 import sqlite3
 from pathlib import Path
 
@@ -238,11 +239,21 @@ def read_only_connection(path=db.DB_FILE):
     return conn
 
 
+@pytest.fixture(scope="module")
+def app_db_copy(tmp_path_factory):
+    """A private copy of data/app.db. The app may write to it (after a fresh build it saves
+    predictions at the first login), while the real data/app.db is never changed."""
+    path = tmp_path_factory.mktemp("app_db") / "app.db"
+    shutil.copy(db.DB_FILE, path)
+    return path
+
+
 @pytest.fixture
-def running_app(monkeypatch):
-    """The app at its login screen, reading the real database read-only."""
+def running_app(monkeypatch, app_db_copy):
+    """The app at its login screen, using the private copy of the database."""
     clear_bare_mode_form()
-    monkeypatch.setattr(db, "get_connection", read_only_connection)
+    real_get_connection = db.get_connection  # keeps the foreign-key setting
+    monkeypatch.setattr(db, "get_connection", lambda path=None: real_get_connection(app_db_copy))
     return AppTest.from_file(str(APP_FILE), default_timeout=120).run()
 
 

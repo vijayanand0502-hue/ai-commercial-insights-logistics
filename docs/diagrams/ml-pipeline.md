@@ -46,7 +46,7 @@ flowchart TB
 
     subgraph THR["5. Threshold tuning (training data only)"]
         OOF["cross_val_predict: out-of-fold probabilities of the best HGB pipeline"]
-        PICK["Highest threshold with out-of-fold recall >= 0.80: 0.397"]
+        PICK["Highest threshold with out-of-fold recall of at least 0.80: 0.397"]
         WRAP["FixedThresholdClassifier(FrozenEstimator(HGB pipeline), threshold 0.397)"]
         OOF --> PICK --> WRAP
     end
